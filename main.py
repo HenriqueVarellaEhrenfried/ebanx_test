@@ -1,4 +1,5 @@
 from fastapi import HTTPException, Body, FastAPI, Response
+from fastapi.responses import PlainTextResponse
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_201_CREATED, HTTP_500_INTERNAL_SERVER_ERROR
 from Data import Data
 from Tools import Tools
@@ -8,12 +9,12 @@ app = FastAPI()
 data = Data()
 tools = Tools()
 
-@app.post("/reset", status_code=200)
+@app.post("/reset", status_code=HTTP_200_OK, response_class=PlainTextResponse)
 async def reset_data():
     data.reset()
     return 'OK'
 
-@app.get("/balance", status_code=200)
+@app.get("/balance", status_code=HTTP_200_OK)
 async def get_balance(account_id=None, response: Response = HTTP_200_OK):
     balance = data.view_balance(account_id)
     if balance != None:
@@ -24,7 +25,14 @@ async def get_balance(account_id=None, response: Response = HTTP_200_OK):
 
 @app.post("/event", status_code=HTTP_201_CREATED)
 async def reset_data(body = Body('{}'), response: Response = HTTP_200_OK):
-    body_received = json.loads(body.decode()) # Transforms binary string into dictionary
+    print(type(body))
+    print(body)
+
+    if isinstance(body, dict): # If we have a dictionary, just attribute it
+        body_received = body
+    else:
+        body_received = json.loads(body.decode()) # Else transforms string into dictionary
+
     return_from_operation = None
     if "type" in body_received.keys():
         if tools.is_body_complete:
