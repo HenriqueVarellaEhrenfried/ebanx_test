@@ -1,8 +1,10 @@
 class Tools():
+    """This class is a toolbox, designed to hold helper functions"""
     def __init__(self):
         pass
 
     def is_body_complete(self, type, body):
+        """Verify for each type of operation if the body has all mandatory fields"""
         if type == "deposit":
             if "destination" in body.keys():
                 if "amount" in body.keys():
