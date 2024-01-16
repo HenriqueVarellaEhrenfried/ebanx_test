@@ -6,14 +6,15 @@ class Data():
         #     "id2":"balance2",
         #     "id3":"balance3"
         # }
-        
+        # Where id1, id2, ..., idn is the account id and
+        # balance1, balance2, ..., balancen is the account balance        
         self.data = {}
-
 
     def reset(self):
         self.data = {}
 
     def view_balance(self, id):
+        # Before showing the the balance, we must know it the account exists
         if id in self.data.keys():
             balance = self.data[id]
         else:
@@ -42,8 +43,12 @@ class Data():
             return 0
 
     def transfer(self, origin, destination, amount):
+        # If the origin account exists, make a transfer:
+        # 1) if the destination exists, just increase its balance and reduce the balance from the origin
+        # 2) if the destination does not exist, create it and its balance is the received amount. Also reduce the balance from the origin
+        # If the origin account does not exist, return 0
+
         amount = int(amount) # Make sure amount is a number
-        print("Accounts >> ", self.data)
         if origin in self.data.keys():
             if destination in self.data.keys():
                 # If both accounts exist, remove money from origin and add it to destination
