@@ -4,6 +4,11 @@ from Data import Data
 app = FastAPI()
 data = Data()
 
+@app.post("/reset", status_code=200)
+async def reset_data():
+    data.reset()
+    return 'OK'
+
 @app.get("/balance", status_code=200)
 async def get_balance(account_id=None):
     balance = data.view_balance(account_id)
